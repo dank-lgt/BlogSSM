@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/edit-nav.css">
+    <link rel="stylesheet" href="css/detail.css">
+    <script src="js/logout.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/avatar.js"></script>
+</head>
+
+<body>
+    <div class="nav">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer">
+            <!-- <input id="search" class="el-icon-search"></input>
+            <button class="searchbtn">
+                <i></i>
+                <span>搜索</span>
+            </button> -->
+        </span>
+        <a href="blog_list.html" style="margin-right: 1%;">主页</a>
+        <div class="dropdown">
+            <!-- <a href="login.html" class="unlogin-avatar">登</a> -->
+            <div class="login-avatar">
+                <img src="img/avatar.png" id="nav-avatar">
+                <span id="master"></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="mydetail.html">个人中心</a>
+                <a href="myblog_list.html">我的博客管理</a>
+                <a href="blog_add.html">写博客</a>
+                <a href="javascript:logout()">注销</a>
+            </div>
+        </div>
+        <!-- <a id="loginElement" href="login.html">登陆</a> -->
+    </div>
+
+    <div class="container">
+        <div class="user-menu">
+            <div class="user-profile">
+                <img src="img/avatar.png" alt="用户图片" id="de-avatar">
+                <h3 id="nickname">用户名</h3>
+            </div>
+            <ul class="menu-list">
+                <li class="menu-item active"><a href="mydetail.html">基本信息</a></li>
+                <li class="menu-item "><a href="change-pass.html">修改密码</a></li>
+                <li class="menu-item "><a href="change-email.html">修改邮箱</a></li>
+            </ul>
+        </div>
+
+        <div class="user-info">
+            <div class="title—info" style="height: 50px;padding-left: 30px;">
+                <span class="title-icon"></span>
+                <span class="title-text">我的信息</span>
+            </div>
+
+            <div class="user-setting">
+                <div class="form-clear user-nick">
+                    <span class="nick">昵称：</span>
+                    <!-- <span class="nickname">用户名</span> -->
+                    <input class="input-na" placeholder="你的用户名" id="nick"></input>
+                </div>
+
+
+                <div class="form-clear user-email">
+                    <span class="email" style="margin-left: 15px;">邮件地址：</span>
+                    <span class="em-adress" style="margin-left: 13px;" id="email"></span>
+                </div>
+
+                <div class="form-clear user-photo">
+                    <div class="nick">我的头像：</div>
+                    <div class="face-tool">
+                        <div class="tool-container">
+                            <a href="face-change.html">
+                                <div class="tool-change-face">
+                                    <span>更换头像</span>
+                                </div>
+                            </a>
+                            <div class="tool-face-box">
+                                <img class="tool-user-face" src="img/avatar.png" alt="" id="change-av">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-clear user-my-btn">
+                    <div class="el-form-item__content">
+                        <div class="padding-dom"></div>
+                        <div class="user-my-btn-warp">
+                            <button type="button" class="el-button el-button--primary" onclick="saveinfo()">
+                                <span>保存</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Myavatar();
+        function saveinfo() {
+            var nickname = jQuery("#nick");
+            if (nickname.val().trim() == '') {
+                alert("请输入要修改的用户名！");
+                nickname.focus();
+                return false;
+            }
+
+            jQuery.ajax({
+                url: '/user/subname',
+                type: 'post',
+                data: {
+                    "nickname": nickname.val()
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data == 1) {
+                        // if (username.val() != res.data.nickname) {
+                            username.html(res.data.nickname);
+                            alert("修改成功！");
+                            location.href = location.href;
+                        // }
+                    } else {
+                        alert("抱歉，操作失败！" + res.msg)
+                    }
+                }
+            });
+        }
+
+        function init() {
+            var nickname = jQuery("#nick");
+            var lnick = jQuery("#nickname");
+            var email = jQuery("#email");
+            jQuery.ajax({
+                url: "/user/initinfo",
+                type: "post",
+                data: {},
+                success: function (res) {
+                    if (res.code == 200 && res.data != 0) {
+                        nickname.val(res.data.nickname);
+                        lnick.html(res.data.nickname);
+                        email.html(res.data.email);
+                    } else {
+                        alert("抱歉，操作失败！" + res.msg)
+                    }
+                }
+            })
+        }
+        init();
+    </script>
+</body>
+
+</html>

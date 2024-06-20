@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/edit-nav.css">
+    <link rel="stylesheet" href="css/photo.css">
+    <!-- 引入cropper.js的CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" rel="stylesheet" />
+    <!-- 引入cropper.js的JavaScript文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/urltools.js"></script>
+    <script src="js/avatar.js"></script>
+</head>
+
+<body>
+    <div class="nav">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer" style="display: none">
+            <input id="search" class="el-icon-search"></input>
+            <button class="searchbtn">
+                <i></i>
+                <span>搜索</span>
+            </button>
+        </span>
+        <a href="blog_list.html" style="margin-right: 1%;">主页</a>
+        <div class="dropdown" style="margin-left: 60%">
+            <!-- <a href="login.html" class="unlogin-avatar">登</a> -->
+            <div class="login-avatar">
+                <img src="img/avatar.png" id="nav-avatar">
+                <span id="master"></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="mydetail.html">个人中心</a>
+                <a href="myblog_list.html">我的博客管理</a>
+                <a href="blog_add.html">写博客</a>
+                <a href="javascript:logout()">注销</a>
+            </div>
+        </div>
+        <!-- <a id="loginElement" href="login.html">登陆</a> -->
+    </div>
+
+    <div class="container">
+        <div class="user-menu">
+            <div class="user-profile">
+                <img src="img/avatar.png" alt="用户图片" id="de-avatar">
+                <h3 class="username">用户名</h3>
+            </div>
+            <ul class="menu-list">
+                <li class="menu-item active"><a href="mydetail.html">基本信息</a></li>
+                <li class="menu-item"><a href="change-pass.html">修改密码</a></li>
+                <li class="menu-item"><a href="change-email.html">修改邮箱</a></li>
+            </ul>
+        </div>
+
+        <div class="modal">
+            <div class="modal-head">
+                <a href="mydetail.html" class="head-wrap">基本信息</a>
+                >更换头像
+            </div>
+            <div class="modal-content clearfix">
+                <div class="img-clip-wrap">
+                    <div class="container-bg" style="height: auto;">
+                        <div class="img-container">
+                            <img src="" id="clip-src-img">
+                            <div class="shadow-box"></div>
+                        </div>
+                        <label for="file_input" class="first-change-lb">
+                            <img src="//s1.hdslb.com/bfs/static/jinkela/account/assets/local_icon.png"
+                                class="first-change-lb_img">
+                            <span >选择本地图片</span>
+                        </label>
+                        <div class="reset-img" style="display: none;">
+                            <label for="file_input">
+                                <i></i>&nbsp;重新选择
+                            </label>
+                        </div>
+                        <input type="file" id="file_input" accept="image/png,image/jpg,image/jpeg"
+                            onchange="loadingimg()">
+                    </div>
+                </div>
+                <div class="border-line"></div>
+                <div class="img-preview-wrap">
+                    <div class="pre-container" id="pre-avatar" style="background-image: url(img/avatar.png);">
+                        <img id="clip_res_img" style="display: none;">
+                    </div>
+                    <div class="pre-info">当前头像</div>
+                </div>
+            </div>
+            <p class="descript">请选择图片上传：大小200 * 100像素支持JPG、PNG等格式，图片需小于2M</p>
+            <div class="modal-footer">
+                <input type="button" value="更新" class="modal-btn btn-confirm" id="submitPhoto">
+            </div>
+        </div>
+    </div>
+    <script>
+        // JavaScript/jQuery
+        // $(document).ready(function () {
+        //     jQuery('#file_input').change(function () {
+        //         var fileData = new FormData();
+        //         fileData.append('avatar', this.files[0]);
+
+        //         $.ajax({
+        //             url: '/user/uphoto', // 服务器端点
+        //             type: 'POST',
+        //             data: fileData,
+        //             processData: false, // 告诉jQuery不要处理发送的数据
+        //             contentType: false, // 告诉jQuery不要设置内容类型头
+        //             success: function (res) {
+        //                 // 成功上传后的回调函数
+        //                 if (res.code == 200 && res.data == 1) {
+        //                     alert('头像更新成功!');
+        //                     location.href = location.href;
+        //                 } else {
+        //                     alert('抱歉：操作失败！' + res.msg)
+        //                     jQuery(".modal-btn").removeAttr("disabled");
+        //                 }
+        //             }
+        //         });
+        //     });
+        // });
+
+        Myavatar();
+        $(document).ready(function () {
+            var $image = $('#clip-src-img');
+            var $preview = $('.img-preview-wrap');
+            // 创建一个Cropper实例
+            var cropper;
+            // 当文件输入发生变化时
+            jQuery('#file_input').change(function (e) {
+                // 获取文件并确保它存在
+                var file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+
+                // 创建一个FileReader对象来读取文件
+                var reader = new FileReader();
+
+                // 设置当文件读取完成后的回调函数
+                reader.onload = function (e) {
+
+                    // 获取图片的URL
+                    var imgSrc = e.target.result;
+
+
+                    // 设置预览图片的src属性为文件的URL，以显示图片
+                    $('#clip-src-img').attr('src', imgSrc);
+                    var crop = $('.shadow-img').attr('src', imgSrc);
+                    $('#clip_res_img').attr('src', imgSrc).show();
+                    $('.first-change-lb').hide();
+                    $('.reset-img').show();
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    // 创建新的Cropper实例
+                    cropper = new Cropper($image[0], {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        preview: '.pre-container',
+                        ready: function () {
+                            document.querySelector('.cropper-bg').style.backgroundImage = 'none';
+                        } // 设置预览容器
+                        // 其他配置...
+                    });
+
+                    $('.first-change-lb').hide();
+                    $('.reset-img').show();
+                    $('.cropper-bg').hide();
+                };
+                // 读取文件内容
+                reader.readAsDataURL(file);
+            });
+
+            // 上传按钮点击事件
+            $('#submitPhoto').click(function () {
+                if (cropper) {
+                    // 获取裁剪后的Canvas
+                    var canvas = cropper.getCroppedCanvas();
+
+                    // 将Canvas转换为Blob
+                    canvas.toBlob(function (blob) {
+                        var formData = new FormData();
+                        formData.append('croppedImage', blob);
+
+                        // 发送POST请求上传图片
+                        $.ajax({
+                            url: '/user/upload',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (res) {
+                                if (res != null && res.code == 200) {
+                                    //刷新网页
+                                    Myavatar();
+                                    alert("头像修改成功!");
+                                    location.href = "mydetail.html";
+                                } else {
+                                    alert("头像上传失败，请稍后重试！");
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+        
+    </script>
+</body>
+
+</html>

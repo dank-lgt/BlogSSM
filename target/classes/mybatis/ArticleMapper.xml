@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ArticleMapper">
+
+    <insert id="add">
+        insert into articleinfo(title,content,uid,updatetime,state)
+        values (#{title},#{content},#{uid},#{updatetime},state = 1)
+    </insert>
+    <insert id="saveToDraft">
+        insert into articleinfo(uid,title,content,state)
+        values (#{uid},#{title},#{content},0)
+    </insert>
+    <update id="addRCount">
+        update articleinfo set rcount = rcount+1 where id=#{id}
+    </update>
+    <update id="update">
+        update articleinfo set title = #{title},content=#{content},updatetime=#{updatetime},state=1
+        where id=#{id} and uid=#{uid}
+    </update>
+    <update id="updateToDraft">
+        update articleinfo set title =#{title},content = #{content},updatetime =#{updatetime},state=0
+        where id =#{id} and uid=#{uid}
+    </update>
+    <delete id="del">
+        delete from articleinfo where id=#{id} and uid=#{uid}
+    </delete>
+    <select id="getDetailByIdAndUid" resultType="com.example.demo.entity.ArticleInfo">
+        select * from articleinfo where id=#{id} and uid=#{uid}
+    </select>
+    <select id="getDetail" resultType="com.example.demo.entity.vo.ArticleInfoVO">
+        select a.*,u.username,u.photo from articleinfo a
+        left join userinfo u on u.id = a.uid
+        where a.id=#{id}
+    </select>
+    <select id="getMyArtList" resultType="com.example.demo.entity.ArticleInfo">
+        select id,title,content,createtime,state from articleinfo where uid=#{uid}
+        order by state,id desc
+    </select>
+    <select id="getListLimitPage" resultType="com.example.demo.entity.ArticleInfo">
+        select id,title,content,createtime,state from articleinfo where state = 1
+        order by id desc
+        limit #{pageSize} offset #{offset}
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(id) from articleinfo;
+    </select>
+    <select id="getSearchArt" resultType="com.example.demo.entity.ArticleInfo">
+        SELECT id, title, content, createtime, state FROM articleinfo
+        <where>
+            state = 1
+            <if test="search != null and search !=''">
+                AND (title LIKE CONCAT('%', #{search}, '%') OR content LIKE CONCAT('%', #{search}, '%'))
+            </if>
+        </where>
+        ORDER BY id DESC
+        limit #{pageSize} OFFSET #{offset};
+    </select>
+    <select id="getCountOnSearch" resultType="java.lang.Integer">
+        select count(*) from articleinfo
+        <where>
+            state = 1
+            <if test="search != null and search !=''">
+                AND (title LIKE CONCAT('%', #{search}, '%') OR content LIKE CONCAT('%', #{search}, '%'))
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,67 @@
+spring:
+  profiles.active: dev
+  servlet:
+    multipart:
+      max-request-size: 10MB # 上传文件的最大值
+      max-file-size: 2MB # 单个文件上传的最大值
+  datasource:
+    url:  jdbc:mysql://localhost:3306/mycnblog?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #邮箱基本配置
+  mail:
+    #配置smtp服务主机地址
+    # qq邮箱为smtp.qq.com          端口号465或587
+    # sina    smtp.sina.cn
+    # aliyun  smtp.aliyun.com
+    # 163     smtp.163.com       端口号465或994
+    host: smtp.qq.com
+    #发送者邮箱
+    username: 1923205436@qq.com
+    #配置密码,注意不是真正的密码，而是刚刚申请到的授权码
+    password: wullfmirinrjbbeh
+    #端口号465或587
+    port: 587
+    #默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+    #其他参数
+    properties:
+      mail:
+        #配置SSL 加密工厂
+        smtp:
+          ssl:
+            #本地测试，先放开ssl
+            enable: false
+            required: false
+          #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: true
+  redis:
+    host: 39.101.74.203
+    port: 6379
+    database: 0
+  session:
+    store-type: redis
+    redis:
+      namespace: spring:session
+      flush-mode: on_save
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 1800
+
+mybatis:
+  mapper-locations: classpath:mybatis/**Mapper.xml
+  # 设置 Mybatis 的 xml 保存路径
+
+  configuration: # 配置打印 MyBatis 执行的 SQL
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 配置打印 MyBatis 执行的 SQL
+logging:
+  level:
+    com:
+      example:
+        demo: debug
+
+

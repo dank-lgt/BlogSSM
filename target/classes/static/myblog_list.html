@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人博客列表</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/edit-nav.css">
+    <script src="js/logout.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/islogin.js"></script>
+    <script src="js/avatar.js"></script>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav" id="na">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer">
+            <input id="search" class="el-icon-search"></input>
+            <button class="searchbtn"  onclick="searchinfo()">
+                <i></i>
+                <span>搜索</span>
+            </button>
+        </span>
+        <a href="blog_list.html" style="margin-right: 1%;">主页</a>
+        <div class="dropdown">
+            <!-- <a href="login.html" class="unlogin-avatar">登</a> -->
+            <div class="login-avatar">
+                <img src="img/avatar.png" id="nav-avatar">
+                <span id="master"></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="mydetail.html">个人中心</a>
+                <a href="myblog_list.html">我的博客管理</a>
+                <a href="blog_add.html">写博客</a>
+                <a href="javascript:logout()">注销</a>
+            </div>
+        </div>
+        <!-- <a id="loginElement" href="login.html">登陆</a> -->
+    </div>
+    <!-- 版心 -->
+    <div class="container">
+        <!-- 左侧个人信息 -->
+        <!-- <div class="container-left" style="display: none;">
+            <div class="card">
+                <img src="img/avatar.png" class="avtar" alt="">
+                <h3>小可爱</h3>
+                <a href="http:www.github.com">github 地址</a>
+                <div class="counter">
+                    <span>文章</span>
+                    <span>分类</span>
+                </div>
+                <div class="counter">
+                    <span>2</span>
+                    <span>1</span>
+                </div>
+            </div>
+        </div> -->
+        <!-- 右侧内容详情 -->
+        <div id="artlist" class="container-right" style="margin-left: 11%;">
+            <!-- 每一篇博客包含标题, 摘要, 时间 -->
+
+
+
+
+        </div>
+    </div>
+
+    <script>
+        Myavatar();
+        function getMyArtList() {
+            jQuery.ajax({
+                url: '/art/mylist',
+                type: 'post',
+                data: {},
+                success: function (res) {
+                    if (res.code == 200 && res.data.length > 0) {
+                        var arthtml = '';
+                        for (let i = 0; i < res.data.length; i++) {
+                            var art = res.data[i];
+                            arthtml += '<div class="blog" style="text-align: center;">';
+                            arthtml += '<div class="title">' + art.title + '</div>';
+                            arthtml += ' <div class="date">' + art.createtime + '</div>';
+                            if (art.state == 0) {
+                                arthtml += '<h4 class="state">草稿</h4>'
+                            }
+                            if (art.state == 2) {
+                                arthtml += '<h4 class="state">未发布</h4>'
+                            }
+                            arthtml += '<div class="desc">';
+                            arthtml += art.content;
+                            arthtml += "</div>";
+                            arthtml += '<a href="blog_content.html?id=' + art.id +
+                                '"class="detail">查看全文</a>&nbsp;&nbsp';
+                            arthtml += '<a href="blog_edit.html?id=' + art.id +
+                                '" class="detail">修改</a>&nbsp;&nbsp;';
+                            arthtml += '<a href="javascript:del(' + art.id + ')" class="detail">删除</a>';
+                            arthtml += '</div>';
+                        }
+                        jQuery("#artlist").html(arthtml);
+                    } else {
+                        jQuery("#artlist").html("<h2 style='margin-left:20px;margin-top:10px;text-align: center;'>暂无文章！</h2>");
+                    }
+                }
+            });
+        }
+        getMyArtList()
+
+
+        function del(id) {
+            if (confirm("是否删除文章？")) {
+                jQuery.ajax({
+                    url: '/art/del',
+                    type: 'post',
+                    data: { "id": id },
+                    success: function (res) {
+                        if (res.code == 200 && res.data == 1) {
+                            alert("恭喜：删除成功！");
+                            location.href = location.href;
+                        } else {
+                            alert("抱歉：操作失败，请重试！" + res.msg);
+                        }
+                    }
+                });
+            }
+        }
+
+        function searchinfo() {
+            var paramPageIndex = getParamByKey("pageIndex");
+            var paramPageSize = getParamByKey("pageSize");
+            var search = jQuery("#search");
+            if (paramPageIndex != null) {
+                pageIndex = paramPageIndex;
+            }
+            if (paramPageSize != null) {
+                pageSize = paramPageSize;
+            }
+            
+            if (search.val() == '') {
+                return false;
+            }
+            jQuery.ajax({
+                url: '/art/getsearchart',
+                type: 'post',
+                data: {
+                    "pageSize": pageSize,
+                    "pageIndex": pageIndex,
+                    "search": search.val()
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data.length > 0) {
+                        var artListHtml = "";
+                        for (var i = 0; i < res.data.length; i++) {
+                            var item = res.data[i];
+                            if (item.state == 1) {
+                                artListHtml += '<div class="blog">';
+                                artListHtml += '<div class="title">' + item.title + '</div>';
+                                artListHtml += '<div class="date">' + item.createtime + '</div>';
+                                artListHtml += '<div class="desc">' + item.content + '</div>';
+                                artListHtml += '<a href="blog_content.html?id=' + item.id + '" class="detail">查看全文&gt;&gt;</a>';
+                                artListHtml += '</div>';
+                            }
+                        }
+                        jQuery("#artlist").html(artListHtml);
+                        jQuery("#pageDiv").show();
+
+                    } else {
+                        jQuery("#pageDiv").hide();
+                        jQuery("#artlist").html("<h2 style='margin-left:20px;margin-top:10px;text-align: center;'>暂无文章！</h2>");
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

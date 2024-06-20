@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客列表</title>
+    <link rel="stylesheet" href="css/list.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/edit-nav.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/avatar.js"></script>
+    <style>
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+        }
+
+        .container {
+            padding-top: 80px;
+            height: auto;
+        }
+
+        .container-right {
+            width: auto;
+        }
+
+        .blog-pagnation-wrapper {
+            height: 40px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .blog-pagnation-item {
+            display: inline-block;
+            padding: 8px;
+            border: 1px solid #d0d0d5;
+            color: #333;
+        }
+
+        .blog-pagnation-item:hover {
+            background: #4e4eeb;
+            color: #fff;
+        }
+
+        .blog-pagnation-item.actvie {
+            background: #4e4eeb;
+            color: #fff;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+
+        }
+    </style>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/urltools.js"></script>
+    <script src="js/islogin.js"></script>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav" id="na">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer">
+            <input id="search" class="el-icon-search" autocomplete="off"></input>
+            <button class="searchbtn" onclick="searchinfo()">
+                <i></i>
+                <span>搜索</span>
+            </button>
+        </span>
+        <a href="blog_list.html" style="margin-right: 1%;">主页</a>
+        <div class="dropdown">
+            <a href="login.html" class="unlogin-avatar">登</a>
+            <div class="login-avatar">
+                <img src="img/avatar.png" id="nav-avatar">
+                <span id="master"></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="mydetail.html">个人中心</a>
+                <a href="myblog_list.html">我的博客管理</a>
+                <a href="blog_add.html">写博客</a>
+                <a href="javascript:logout()">注销</a>
+            </div>
+        </div>
+        <!-- <a id="loginElement" href="login.html">登陆</a> -->
+    </div>
+    <!-- 版心 -->
+    <div class="container">
+        <!-- 右侧内容详情 -->
+        <div class="container-right" style="width: 100%;">
+            <!-- 每一篇博客包含标题, 摘要, 时间 -->
+            <div id="artlist" class="blog" style="text-align: center;">
+
+            </div>
+            <hr>
+            <div id="pageDiv" class="blog-pagnation-wrapper">
+                <button class="blog-pagnation-item" onclick="doFirst()">首页</button>
+                <button class="blog-pagnation-item" onclick="doPre()">上一页</button>
+                <button class="blog-pagnation-item" onclick="doNext()">下一页</button>
+                <button class="blog-pagnation-item" onclick="doEnd()">末页</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        isLogin();
+        Myavatar();
+        var pageIndex = 1; // 当前页码（从1开始）
+        var pageSize = 5; // 每页显示最大条数
+        var pageCount = 1; // 总页数
+        var search = getParamByKey("search");
+        function pageInit() {
+            var paramPageIndex = getParamByKey("pageIndex");
+            var paramPageSize = getParamByKey("pageSize");
+            var paramSearch = decodeURI(search);
+            if (paramPageIndex != null) {
+                pageIndex = paramPageIndex;
+            }
+            if (paramPageSize != null) {
+                pageSize = paramPageSize;
+            }
+            if (paramSearch != null) {
+                search = paramSearch;
+                jQuery("#search").val(search);
+            }
+            searchinfo()
+        }
+        pageInit();
+
+        function doFirst() {
+            if (pageIndex <= 1) {
+                alert("当前已经在首页了！")
+                return false;
+            }
+            pageIndex = 1
+            location.href = 'search.html?pageIndex=' + pageIndex + "&pageSize=" + pageSize +"&search=" + search;
+
+        }
+
+        function doPre() {
+            if (pageIndex <= 1) {
+                alert("当前已经在首页了！")
+                return false;
+            }
+            --pageIndex;
+            location.href = 'search.html?pageIndex=' + pageIndex + "&pageSize=" + pageSize +"&search=" + search;
+        }
+
+        function doNext() {
+            if (pageIndex >= pageCount) {
+                alert("当前已经在末页了！")
+                return false;
+            }
+            ++pageIndex;
+            location.href = 'search.html?pageIndex=' + pageIndex + "&pageSize=" + pageSize +"&search=" + search;
+        }
+
+        function doEnd() {
+            if (pageIndex >= pageCount) {
+                alert("当前已经在末页了！")
+                return false;
+            }
+            location.href = 'search.html?pageIndex=' + pageCount + "&pageSize=" + pageSize +"&search=" + search;
+        }
+
+
+        function searchinfo() {
+            
+            jQuery.ajax({
+                url: '/art/getsearchart',
+                type: 'post',
+                data: {
+                    "pageSize": pageSize,
+                    "pageIndex": pageIndex,
+                    "search": search
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data.length > 0) {
+                        var artListHtml = "";
+                        for (var i = 0; i < res.data.length; i++) {
+                            var item = res.data[i];
+                            if (item.state == 1) {
+                                artListHtml += '<div class="blog">';
+                                artListHtml += '<div class="title">' + item.title + '</div>';
+                                artListHtml += '<div class="date">' + item.createtime + '</div>';
+                                artListHtml += '<div class="desc">' + item.content + '</div>';
+                                artListHtml += '<a href="search.html?id=' + item.id + '" class="detail">查看全文&gt;&gt;</a>';
+                                artListHtml += '</div>';
+                            }
+                        }
+                        jQuery("#artlist").html(artListHtml);
+                        jQuery("#pageDiv").show();
+
+                    } else {
+                        jQuery("#pageDiv").hide();
+                        jQuery("#artlist").html("<h2 style='margin-left:20px;margin-top:10px;text-align: center;'>暂无文章！</h2>");
+                    }
+                }
+            });
+
+            jQuery.ajax({
+                url: '/art/getcountart',
+                type: 'post',
+                data: {"search": search},
+                success: function (res) {
+                    if (res.code == 200 & res.data > 0) {
+                        pageCount = Math.ceil(res.data / pageSize);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

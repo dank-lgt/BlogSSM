@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客编辑</title>
+
+    <!-- 引入自己写的样式 -->
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_edit.css">
+
+    <!-- 引入 editor.md 的依赖 -->
+    <link rel="stylesheet" href="editor.md/css/editormd.min.css" />
+    <link rel="stylesheet" href="css/timer.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="editor.md/editormd.js"></script>
+    <script src="js/urltools.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/savedraft.js"></script>
+
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer"></span>
+        <a href="blog_list.html">主页</a>
+        <a href="javascript:logout()">注销</a>
+    </div>
+    <!-- 编辑框容器 -->
+    <div class="blog-edit-container">
+        <!-- 标题编辑区 -->
+        <div class="title">
+            <input id="title" type="text" placeholder="在这里写下文章标题">
+            <button onclick="mysub()">发布文章</button>
+            <div class="Timediv">
+                <button id="openModal">定时发布</button>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>选择日期和时间</h2>
+                        <label for="datetime">选择日期和时间:</label>
+                        <input type="datetime-local" id="datetime" name="datetime">
+                        <br><br>
+                        <button id="submitBtn" onclick="schedule()">提交</button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="javascript:savedraft()">保存草稿</button>
+        </div>
+        <!-- 创建编辑器标签 -->
+        <div id="editorDiv">
+            <textarea id="editor-markdown" style="display:none;"></textarea>
+        </div>
+    </div>
+
+    <script>
+        var isSubmit = 1;
+        var id = 0;
+        var editor;
+        var DateTime = null;
+        function initEdit(md) {
+            // 编辑器设置
+            editor = editormd("editorDiv", {
+                // 这里的尺寸必须在这里设置. 设置样式会被 editormd 自动覆盖掉. 
+                width: "100%",
+                // 高度 100% 意思是和父元素一样高. 要在父元素的基础上去掉标题编辑区的高度
+                height: "calc(100% - 50px)",
+                // 编辑器中的初始内容
+                markdown: md,
+                // 指定 editor.md 依赖的插件路径
+                path: "editor.md/lib/",
+                saveHTMLToTextarea: true // 
+            });
+        }
+        // initEdit("# 在这里写下一篇博客"); // 初始化编译器的值
+        //接口1：先查询当前文章信息进行展示
+        function initArt() {
+            id = getParamByKey("id");
+            if (id == null || id <= 0) {
+                isSubmit = 0;
+                alert("抱歉：非法参数！");
+                return false;
+            }
+            jQuery.ajax({
+                url: '/art/getdetailbyid',
+                type: 'post',
+                data: {
+                    "id": id
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data != null && res.data.id > 0) {
+                        jQuery("#title").val(res.data.title);
+                        initEdit(res.data.content);
+                    } else {
+                        isSubmit = 0;
+                        alert("抱歉：非法参数！");
+                    }
+                }
+            });
+        }
+        initArt();
+        //接口2：提交修改操作
+        function mysub() {
+            // alert(editor.getValue()); // 获取值
+            if (isSubmit == 0) {
+                alert("抱歉：非法操作，请刷新当前页面再试！");
+                return false;
+            }
+            //非空判断
+            var title = jQuery("#title");
+            if (title.val().trim() == "") {
+                alert("请先输入标题！");
+                title.focus();
+                return false;
+            }
+            var content = editor.getValue();
+            if (content == "") {
+                alert('请输入正文！');
+                return false;
+            }
+            jQuery.ajax({
+                url: '/art/update',
+                type: 'post',
+                data: {
+                    "id": id,
+                    "title": title.val(),
+                    "content": content
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data == 1) {
+                        alert("发布成功！");
+                        location.href = "myblog_list.html";
+                    } else {
+                        alert("抱歉：操作失败，请重试！");
+                    }
+                }
+
+            });
+            // editor.setValue("#123") // 设置值
+        }
+
+        // JavaScript代码用于控制模态框的显示和隐藏，并提交选择的日期时间给后端
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("openModal");
+        var span = document.getElementsByClassName("close")[0];
+        var submitBtn = document.getElementById("submitBtn");
+
+        btn.onclick = function () {
+            modal.style.display = "block";
+
+            var now = new Date();
+            var localTime = new Date(now.getTime() + 12 * 3600 * 1000).toISOString().slice(0, 16);
+
+            document.getElementById("datetime").value = localTime;
+
+            var minDate = localTime;
+
+            minDate.setHours(minDate.getHours() + 4);
+
+            document.getElementById("datetime").setAttribute("min", minDate);
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+         function schedule () {
+            DateTime = jQuery("#datetime").val();
+            // 这里可以将选择的日期时间进行处理或提交到后端处理
+            var title = jQuery("#title");
+            var content = editor.getValue();
+            jQuery.ajax({
+                url: '/art/schedule',
+                type: 'post',
+                data: {
+                    "id": id,
+                    "title": title.val(),
+                    "content": content,
+                    "dateTime": DateTime // 选定的日期时间作为数据发送给后端
+                },
+                success: function (res) {
+                    if (res.code == 200 && res.data == 1 && res != null) {
+                        alert("定时成功！");
+                        location.href = "myblog_list.html";
+                    } else {
+                        alert("抱歉：操作失败，请重试！" + res.msg);
+                    }
+                }
+            });
+            console.log("选择的日期时间是：" + DateTime);
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

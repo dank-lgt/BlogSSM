@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+    <link rel="stylesheet" href="css/edit-nav.css">
+    <link rel="stylesheet" href="css/photo.css">
+    <link rel="stylesheet" href="css/detail.css">
+    <script src="js/logout.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/urltools.js"></script>
+    <script src="js/avatar.js"></script>
+    <style>
+        .step-indicator {
+            padding: 0 15px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator__step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .step-indicator__step--active {
+            background-color: #007bff;
+        }
+
+        .step-indicator__line {
+            flex: 1;
+            height: 3px;
+            background-color: #ccc;
+            align-self: center;
+        }
+
+        .step-indicator__line--active {
+            background-color: #007bff;
+        }
+
+        .choice {
+            display: flex;
+            position: relative;
+            padding: 20px 30px 20px 30px;
+        }
+
+        .step {
+            line-height: 30px;
+            position: relative;
+            width: 565px;
+            height: 30px;
+        }
+
+        .step input {
+            border-radius: 10px;
+            text-indent: 8px;
+            margin-bottom: 20px;
+        }
+
+        .step span {
+            margin-right: 20px;
+        }
+
+        .btn-ne {
+            padding-left: 12px;
+            border: 1px solid #dcdfe6;
+            width: 110px;
+            height: 40px;
+            border-radius: 10px;
+            background: #00a1d6 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 234px;
+        }
+
+        .btn-pre {
+            float: left;
+            padding-right: 12px;
+            border: 1px solid #dcdfe6;
+            width: 110px;
+            height: 40px;
+            border-radius: 10px;
+            background: #00a1d6 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 13px;
+            margin-left: 200px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        <img src="img/logo2.jpg" alt="">
+        <span class="title">我的博客系统</span>
+        <!-- 用来占据中间位置 -->
+        <span class="spacer">
+            <!-- <input id="search" class="el-icon-search"></input>
+            <button class="searchbtn">
+                <i></i>
+                <span>搜索</span>
+            </button> -->
+        </span>
+        <a href="blog_list.html" style="margin-right: 1%;">主页</a>
+        <div class="dropdown">
+            <!-- <a href="login.html" class="unlogin-avatar">登</a> -->
+            <div class="login-avatar">
+                <img src="img/avatar.png" id="nav-avatar">
+                <span id="master"></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="mydetail.html">个人中心</a>
+                <a href="myblog_list.html">我的博客管理</a>
+                <a href="blog_add.html">写博客</a>
+                <a href="javascript:logout()">注销</a>
+            </div>
+        </div>
+        <!-- <a id="loginElement" href="login.html">登陆</a> -->
+    </div>
+
+    <div class="container">
+        <div class="user-menu">
+            <div class="user-profile">
+                <img src="img/avatar.png" alt="用户图片" id="de-avatar">
+                <h3 class="username">用户名</h3>
+            </div>
+            <ul class="menu-list">
+                <li class="menu-item "><a href="mydetail.html">基本信息</a></li>
+                <li class="menu-item active"><a href="change-pass.html">修改密码</a></li>
+                <li class="menu-item"><a href="change-email.html">修改邮箱</a></li>
+            </ul>
+        </div>
+
+        <div class="modal">
+            <div class="modal-head" style="height: 50px;padding-left: 30px;">
+                <span class="title-icon"></span>
+                <a href="mydetail.html" class="head-wrap" style="margin-left: 10px;">基本信息</a>
+                <span style="font-size: 15px;">>修改密码</span>
+            </div>
+            <div class="choice">
+                <select id="verificationMethod" onclick="handleVerificationChange()">
+                    <option value="">请选择验证方式</option>
+                    <option value="choice-em">邮箱验证</option>
+                    <!-- <option value="choice-pwd">密码验证</option> -->
+                </select>
+            </div>
+            <div id="emailContainer" class="email-ch" style="display: none;">
+                <div class="step-indicator">
+                    <div class="step-indicator__step" id="step1-indicator">1</div>
+                    <div class="step-indicator__line"></div>
+                    <div class="step-indicator__step" id="step2-indicator">2</div>
+                    <div class="step-indicator__line"></div>
+                    <div class="step-indicator__step" id="step3-indicator">3</div>
+                </div>
+
+                <div id="step1" class="step">
+                    <!-- <span>用户名</span>
+                    <input id="username" type="text" placeholder="请输入用户名"> -->
+                    <span>邮箱:</span>
+                    <input id="email" type="email" placeholder="请输入邮箱">
+                    <div>
+                        <button class="btn-ne" onclick="nextStep()">
+                            <span>下一步</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="step2" class="step" style="display: none;">
+                    <div>
+                        <span>您的邮箱：</span>
+                        <span id="email-ex" type="email"></span>
+                    </div>
+
+                    <span>验证码:</span>
+                    <input id="verificationCode" type="text" placeholder="请输入收到的验证码">
+                    <div>
+                        <button class="btn-pre" onclick="previousStep()">上一步</button>
+                        <button class="btn-ne" onclick="nextStep()">
+                            <span>下一步</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="step3" class="step" style="display: none;">
+                    <span>新密码:</span>
+                    <input id="newPassword" type="password" placeholder="请输入新密码">
+                    <div>
+                        <button class="btn-pre" onclick="previousStep()">上一步</button>
+                        <button class="btn-ne" onclick="resetPassword()">
+                            <span>确认</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <!-- 密码验证相关元素 -->
+            <div id="passwordContainer" style="display: none;">
+                <!-- <div class="step-indicator">
+                    <div class="step-indicator__step" id="step1-indicator">1</div>
+                    <div class="step-indicator__line"></div>
+                    <div class="step-indicator__step" id="step2-indicator">2</div>
+                    <div class="step-indicator__line"></div>
+                    <div class="step-indicator__step" id="step3-indicator">3</div>
+                </div>
+
+                <div id="step1" class="step">
+                    <span>用户名</span>
+                    <input id="username" type="text" placeholder="请输入用户名"> -->
+                    <!-- <span>邮箱:</span>
+                    <input id="email" type="email" placeholder="请输入邮箱"> -->
+                    <!-- <div>
+                        <button class="btn-ne" onclick="nextStep()">
+                            <span>下一步</span>
+                        </button>
+                    </div>
+                </div>
+
+                 <div id="step2" class="step" style="display: none;">
+                    <div>
+                        <span>您的邮箱：</span>
+                        <span id="email-ex" type="email"></span>
+                    </div>
+
+                    <span>验证码:</span>
+                    <input id="verificationCode" type="text" placeholder="请输入收到的验证码">
+                    <div>
+                        <button class="btn-pre" onclick="previousStep()">上一步</button>
+                        <button class="btn-ne" onclick="nextStep()">
+                            <span>下一步</span>
+                        </button>
+                    </div>
+                </div> 
+
+                <div id="step3" class="step" style="display: none;">
+                    <span>新密码:</span>
+                    <input id="nPassword" type="password" placeholder="请输入新密码">
+                    <div>
+                        <button class="btn-pre" onclick="previousStep()">上一步</button>
+                        <button class="btn-ne" onclick="resetPassword()">
+                            <span>确认</span>
+                        </button>
+                    </div>
+
+                </div> -->
+            </div>
+        </div>
+        <script>
+
+            // 验证邮箱格式
+            var regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+            Myavatar();
+            function handleVerificationChange() {
+                var verificationMethod = jQuery("#verificationMethod").val();
+                if (verificationMethod === "choice-em") {
+                    jQuery("#emailContainer").show();
+                    jQuery("#passwordContainer").hide();
+                } else if (verificationMethod === "choice-pwd") {
+                    jQuery("#emailContainer").hide();
+                    jQuery("#passwordContainer").show();
+                } else if (verificationMethod === "") {
+                    jQuery("#emailContainer").hide();
+                    jQuery("#passwordContainer").hide();
+                }
+            }
+            // handleVerificationChange();
+
+            var steps = ['step1', 'step2', 'step3']; // 步骤的ID数组
+            var indicators = ['step1-indicator', 'step2-indicator', 'step3-indicator']; // 步骤指示器的ID数组
+            var active = 0; // 当前步骤的索引
+
+            function showStep(index) {
+                $('#' + steps[active]).hide();
+                $('#' + indicators[active]).removeClass('step-indicator__step--active');
+                active = index;
+                $('#' + steps[active]).show();
+                $('#' + indicators[active]).addClass('step-indicator__step--active');
+            }
+
+            showStep(active)
+            function nextStep() {
+                var emailContainer = jQuery("#emailContainer");
+                if (!emailContainer.is(":hidden")) {
+                    var email = jQuery("#email").val();
+                    var verificationCode = jQuery("#verificationCode").val();
+                    jQuery("#email-ex").text(email);
+                    if (email === "") {
+                        alert('请输入邮箱！');
+                        return;
+                    }
+                    if (!regEmail.test(email)) {
+                        alert('邮箱格式不正确！');
+                        return;
+                    }
+                    if (active === 0) {
+                        jQuery.ajax({
+                            url: "/mail/sendmail",
+                            type: 'post',
+                            data: {
+                                "email": email
+                            },
+                            success: function (res) {
+                                if (res.code == 200 && res.data == 1) {
+                                    alert("发送成功！");
+                                    if (active < steps.length - 1) {
+                                        showStep(active + 1);
+                                    }
+                                } else {
+                                    alert("抱歉：操作失败，请重试！");
+                                    location.href = location.href;
+                                }
+                            }
+                        });
+                    }
+                    if (active === 1) {
+                        if (verificationCode === "") {
+                            alert('请输入验证码！');
+                            return;
+                        }
+                        jQuery.ajax({
+                            url: '/mail/checkemailcode',
+                            type: 'post',
+                            data: {
+                                "verificationCode": verificationCode
+                            },
+                            success: function (res) {
+                                if (res.code == 200 && res.data == 1) {
+                                    alert("验证成功！")
+                                    if (active < steps.length - 1) {
+                                        showStep(active + 1);
+                                    }
+                                } else {
+                                    alert("验证码错误，请重试！");
+                                    return;
+                                }
+                            }
+                        })
+                    }
+                }
+                var passwordContainer = $("#passwordContainer");
+                if (!passwordContainer.is(":hidden")) {
+                    var username = jQuery("#username").val();
+                    if (username === '') {
+                        alert('请输入用户名！');
+                        return;
+                    }
+                    if (active == 0) {
+                        if (active < steps.length - 1) {
+                            showStep(active + 1);
+                        }
+                    }
+                }
+            }
+
+            function previousStep() {
+                if (active > 0) {
+                    showStep(active - 1);
+                }
+            }
+
+
+            function resetPassword() {
+                if (newPwd == '') {
+                    alert("请输入密码");
+                    return;
+                }
+                var newPwd = jQuery("#newPassword").val();
+                jQuery.ajax({
+                    url: '/user/updatepwd',
+                    type: 'post',
+                    data: {
+                        "newPwd": newPwd
+                    },
+                    success: function (res) {
+                        if (res.code == 200 && res.data == 1) {
+                            alert("修改成功！")
+                            location.href = "login.html";
+                        } else {
+                            if (res.data == newPwd) {
+                                alert("不可和原密码相同！")
+                                return;
+                            }
+                            alert("修改失败！");
+                        }
+                    }
+                })
+            }
+
+            function simulateSuccess() {
+                // 模拟成功的延迟
+                setTimeout(function () {
+                    alert("操作成功！");
+                }, 500);
+            }
+        </script>
+</body>
+
+</html>

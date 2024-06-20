@@ -1,0 +1,341 @@
+body {
+    font-family: MicrosoftYaHei;
+}
+
+div {
+    display: block;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    /* 设置flex布局 */
+    height: 100%;
+    width: 795px;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    align-items: flex-start;
+    /* 顶部对齐 */
+}
+
+.user-menu {
+    text-align: center;
+    width: 200px;
+    border-right: 1px solid #ccc;
+}
+
+.user-profile {
+    /* text-align: center; */
+    padding: 20px;
+}
+
+.user-profile img {
+    width: 100px;
+    border-radius: 50%;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.user-menu {
+    width: 200px;
+    border-right: 1px solid #ccc;
+    /* 如果需要，可以添加flex属性来固定侧边栏宽度 */
+    flex: 0 0 200px;
+}
+
+.menu-item.active a {
+    background-color: #f4f4f4;
+}
+
+
+a {
+    text-decoration: none
+}
+
+.modal {
+    width: 830px;
+    text-align: center;
+}
+
+.modal-head {
+    position: relative;
+    text-align: left;
+    padding: 0 20px;
+    border-bottom: 1px solid #e5e9ef;
+    height: 50px;
+}
+
+.head-wrap {
+    position: relative;
+    font-size: 14px;
+    color: #222;
+    height: 50px;
+    line-height: 50px;
+    text-align: left;
+}
+
+.modal-head {
+    color: #6d757a;
+}
+
+.clearfix:after,
+.clearfix:before {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.modal-content {
+    padding: 80px 20px 56px;
+    display: inline-block;
+}
+
+.img-clip-wrap {
+    height: 182px;
+    margin-top: 39px;
+    float: left;
+    position: relative;
+    margin-right: 40px;
+}
+
+.container-bg {
+    width: 180px;
+    height: 180px;
+    background: black;
+    border-radius: 4px;
+    border: 1px solid #e5e9ef;
+}
+
+.img-container {
+    position: relative;
+    height: 0;
+    margin: auto;
+}
+
+img {
+    border: 0;
+}
+
+.img-container img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.img-container .shadow-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 1;
+}
+
+.crop-box,
+.crop-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.crop-wrap {
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    cursor: crosshair;
+}
+
+.shadow-box,
+.shadow-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.shadow-box {
+    overflow: hidden;
+    z-index: 1;
+}
+
+.crop-box {
+    display: none;
+    width: 0;
+    height: 0;
+    cursor: move;
+    border: 1px solid #fff;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.first-change-lb {
+    cursor: pointer;
+    background: #f1f2f5;
+    width: 178px;
+    height: 84px;
+    position: absolute;
+    top: 0;
+    left: 1px;
+    border: 1px solid #e5e9ef;
+    border-radius: 4px;
+    transition: all .6s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.first-change-lb_img {
+    width: 36px;
+    height: 36px;
+}
+
+.first-change-lb span {
+    display: block;
+    font-family: MicrosoftYaHei;
+    font-size: 14px;
+    color: #5a6267;
+    line-height: 20px;
+    letter-spacing: 0;
+    margin-left: 6px;
+}
+
+.reset-img {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.reset-img label {
+    font-size: 12px;
+    color: #6d757a;
+    cursor: pointer;
+}
+
+i {
+    font-style: normal;
+}
+
+.reset-img label i {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: bottom;
+    background-image: url(//s1.hdslb.com/bfs/static/jinkela/account/assets/icons_m_2.png);
+    background-position: -23px -1303px;
+    cursor: pointer;
+}
+
+
+#file_input {
+    display: none;
+}
+
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    /* font-size: 100%; */
+}
+
+.img-preview-wrap {
+    margin-left: 40px;
+    margin-top: 30px;
+    float: left;
+}
+
+.pre-container {
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #e6eaf0;
+    background-size: cover;
+}
+
+.border-line {
+    height: 182px;
+    width: 1px;
+    background: #e5e9ef;
+    float: left;
+}
+
+.pre-container img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.pre-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #99a2aa;
+}
+
+
+.descript {
+    line-height: 16px;
+    font-size: small;
+    color: #99a2aa;
+}
+
+.btn-confirm.disabled {
+    background: #f4f5f7;
+    border-color: #f4f5f7;
+    color: #ccd0d7;
+    cursor: auto;
+}
+
+.btn-confirm {
+    border: 1px solid #00a1d6;
+    color: #fff;
+    background-color: #00a1d6;
+}
+
+.btn-confirm:hover{
+    color:#000;
+    font-size: 10px;
+}
+.modal-btn {
+    display: inline-block;
+    width: 140px;
+    height: 40px;
+    font-size: 14px;
+    line-height: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modal-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+

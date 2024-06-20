@@ -1,0 +1,70 @@
+.el-icon-search {
+    width: 400px;
+    height: 30px;
+    padding: 5px;
+    border: 1px solid #e8e8ed;
+    background: #f5f6f7;
+    color: #222226;
+    border-radius: 16px 0 0 16px;
+    text-indent: 12px;
+    display: inline-block;
+    line-height: inherit;
+    overflow: auto;
+    vertical-align: top;
+    border-right: none;
+    box-sizing: border-box;
+}
+
+
+.nav .spacer {
+
+    display: flex;
+    justify-content: center;
+}
+
+i {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: url(https://g.csdnimg.cn/common/csdn-toolbar/images/csdn-white-search.png) no-repeat center center;
+    background-size: 100%;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    margin-left: 14px;
+}
+
+.searchbtn {
+    display: inline-block;
+    width: 88px;
+    height: 100%;
+    outline: 0;
+    border: 0 none;
+    border-radius: 0 16px 16px 0;
+    font-size: 14px;
+    line-height: 32px;
+    cursor: pointer;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    background-color: rgb(254,132,79);
+    text-align: left;
+}
+
+.searchbtn:hover {
+    background-color: green;
+}
+
+.unlogin-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    letter-spacing: 0;
+    background: #00aeec;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    outline: none;
+}

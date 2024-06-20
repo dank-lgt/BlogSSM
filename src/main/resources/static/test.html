@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>通过邮箱找回密码</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <style>
+    /* CSS样式 */
+    .resetPassword {
+      margin: 20px;
+    }
+
+    .container {
+      width: 600px;
+      margin: 0 auto;
+    }
+
+    .common_div {
+      margin-top: 20px;
+      /* text-align: right; */
+    }
+
+    .action_button {
+      width: 100px;
+    }
+
+    /* 适应不同屏幕尺寸的样式 */
+    @media (max-width: 768px) {
+
+      /* 在小屏幕上应用的样式 */
+      body {
+        font-size: 14px;
+      }
+    }
+    @media (min-width: 769px) {
+      /* 在大屏幕上应用的样式 */
+      body {
+        font-size: 16px;
+      }
+    }
+
+    .el-input__inner {
+      width: 500px;
+      border-radius: 10px;
+    }
+
+    body {
+      overflow: hidden;
+    };
+  </style>
+</head>
+
+<body>
+  <div id="app" class="resetPassword">
+    <div class="container">
+      <el-steps :active="active" finish-status="success">
+        <el-step title="验证用户名和邮箱"></el-step>
+        <el-step title="输入验证码"></el-step>
+        <el-step title="新密码设置"></el-step>
+      </el-steps>
+      <div class="step" v-show="active === 0">
+        <label>用户名</label>
+        <el-input id="username" v-model="username" placeholder="请输入要找回密码的用户名"></el-input>
+        <label>邮箱</label>
+        <el-input id="email" v-model="email" placeholder="请输入用来找回密码的邮箱"></el-input>
+      </div>
+      <div class="step" v-show="active === 1">
+        <label>验证码</label>
+        <el-input v-model="code" placeholder="请输入邮箱验证码"></el-input>
+      </div>
+      <div class="step" v-show="active === 2">
+        <label>新密码</label>
+        <el-input  v-model="password" placeholder="请输入新密码" type="password"></el-input>
+      </div>
+      <div class="common_div">
+        <el-button id="prevBtn" v-show="active > 0" @click="prevStep">上一步</el-button>
+        <el-button id="nextBtn" @click="nextStep">下一步</el-button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        active: 0,
+        disabled: true,
+        username: '',
+        email: '',
+        code: '',
+        password: ''
+      },
+      methods: {
+        prevStep() {
+          this.active--;
+        },
+        nextStep() {
+          if (this.active === 0) {
+            if (this.validateInput()) {
+              this.disabled = true;
+              alert('数据正确发送，请耐心等待，勿重复操作！');
+              // 发送验证用户名和邮箱的请求
+              this.active++;
+            }
+          } else if (this.active === 1) {
+            if (this.validateCode()) {
+              alert('验证码匹配正确！');
+              // 发送验证验证码的请求
+              this.active++;
+            }
+          } else if (this.active === 2) {
+            if (this.validatePassword()) {
+              alert('密码修改成功！');
+              // 发送密码重置的请求
+              location.href = "login.html"
+            }
+          }
+        },
+        validateInput() {
+          if (this.username === '' || this.email === '') {
+            if (this.username === '') {
+              alert('警告，用户名未输入！');
+            } else {
+              alert('警告，邮箱未输入！');
+            }
+            return false;
+          } else {
+            // 验证邮箱格式
+            var regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (!regEmail.test(this.email)) {
+              alert('邮箱格式不正确！');
+              return false;
+            }
+          }
+          axios.post('/user/checkemail',{username:this.username,email:this.email})
+          .then(function(res){
+            if(res.code===200 && res.data ===1){
+              return true;
+            }
+          })
+          // 发送POST请求   
+        },
+        validateCode() {
+          if (this.code === '') {
+            alert('警告，验证码未输入，请去您的邮箱中查看！');
+            return false;
+          }
+
+          return true;
+        },
+        validatePassword() {
+          if (this.password === '') {
+            alert('警告，新密码未输入！');
+            return false;
+          }
+
+          return true;
+        }
+      }
+    });
+    
+  </script>
+</body>
+</html>

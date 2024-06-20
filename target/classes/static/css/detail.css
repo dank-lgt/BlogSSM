@@ -1,0 +1,274 @@
+div {
+    display: block;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.user-info {
+    float: left;
+    width: 829px;
+
+    min-height: 890px;
+    overflow: hidden;
+}
+
+.user-info .title-info {
+    width: 565px;
+    height: 50px;
+    padding-left: 30px;
+    border-bottom: 1px solid #171717;
+}
+
+.title-text {
+    float: left;
+    margin: 15px 0 0 5px;
+    color: #00a1d6;
+    font-size: 14px;
+    cursor: default;
+}
+
+.title-icon {
+    float: left;
+    width: 4px;
+    height: 16px;
+    margin-top: 18px;
+    background-color: #00a1d6;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+.container {
+    display: flex;
+    /* 设置flex布局 */
+    height: 100%;
+    width: 795px;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    align-items: flex-start;
+    /* 顶部对齐 */
+}
+
+.user-menu {
+    text-align: center;
+    width: 200px;
+    border-right: 1px solid #ccc;
+}
+
+.user-profile {
+    /* text-align: center; */
+    padding: 20px;
+}
+
+.user-profile img {
+    width: 100px;
+    border-radius: 50%;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.user-menu {
+    width: 200px;
+    border-right: 1px solid #ccc;
+    /* 如果需要，可以添加flex属性来固定侧边栏宽度 */
+    flex: 0 0 200px;
+}
+
+.menu-item.active a {
+    background-color: #f4f4f4;
+}
+
+.user-setting {
+    padding: 20px 20px 0;
+    position: relative;
+}
+
+.form-clear {
+    line-height: 30px;
+    position: relative;
+    width: 565px;
+    height: 30px;
+    margin-bottom: 22px;
+}
+
+
+.input-na {
+    float: left;
+    width: 225px;
+    height: 30px;
+    margin-right: 40px;
+    border-radius: 10px;
+    border: none;
+}
+
+.nick {
+    float: left;
+    text-align: right;
+    width: 95px;
+    margin-right: 20px;
+    line-height: 30px;
+    padding: 0;
+}
+
+.change-name {
+    font-size: 14px;
+    color: #898989;
+}
+
+
+.face-tool {
+    padding: 20px 0;
+}
+
+.tool-container {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #e5e9ef;
+    border-radius: 50%;
+    position: relative;
+    margin: 0 auto;
+    line-height: 30px;
+}
+
+a {
+    text-decoration: none
+}
+
+.tool-change-face {
+    width: 54px;
+    height: 54px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: #00a1d6;
+    border: 1px solid #00a1d6;
+    position: absolute;
+    left: -27px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tool-change-face span {
+    width: 2em;
+    font-size: 14px;
+    line-height: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+
+
+.tool-face-box {
+    width: 168px;
+    height: 168px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tool-user-face {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.user-my-btn {
+
+   
+    bottom: 0; /* 放置在底部 */
+    width: 100%; /* 宽度与父元素相同 */
+    /* 按钮的样式，确保它在user-photo下面 */
+    display: block; /* 或者flex，根据需要 */
+    text-align: center; /* 如果您想要按钮居中 */
+    /* 其他样式根据需要添加 */
+}
+
+.el-form-item__content {
+    line-height: 40px;
+    position: relative;
+    font-size: 14px;
+}
+
+.padding-dom {
+    width: 565px;
+    height: 39px;
+    border-bottom: 1px solid #e5e9ef;
+    margin-bottom: 40px;
+}
+
+.user-my-btn-warp {
+    /* height: 36px; */
+    margin-top: 20px;
+}
+
+.user-my-btn .el-button--primary {
+    width: 110px;
+    position: absolute;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    background: #00a1d6 !important;
+}
+
+.el-button--primary {
+    color: #fff;
+    background-color: #409eff;
+    border-color: #409eff;
+}
+
+.el-button {
+    /* display: inline-block; */
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    position: absolute;
+    /* left: 45%; */
+    transform: translateX(-50%);
+}
+
+.user-photo {
+    /* 确保有足够的底部边距来放置按钮 */
+    margin-bottom: 300px; /* 或者更多，根据需要调整 */
+}
+
+.el-button--primary:active {
+    background-color: #000; /* 您可以选择您喜欢的颜色 */
+    color: #333; /* 按钮文字颜色，根据需要调整 */
+    /* 可以添加其他样式，如边框颜色等 */
+}
