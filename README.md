@@ -7,17 +7,20 @@
 ![登录](https://img-blog.csdnimg.cn/direct/1d68cc8a5cbe4efe8b343cc32975bd87.png#pic_center)
 注册页面
 ![注册](https://img-blog.csdnimg.cn/direct/8c325bbdeefb47e1b7e42f8de372f534.png#pic_center)
-博客列表页![](https://img-blog.csdnimg.cn/direct/580c5240a5484f50919f9115c8f54e55.png#pic_center)
+博客列表页
+![](https://img-blog.csdnimg.cn/direct/580c5240a5484f50919f9115c8f54e55.png#pic_center)
 个人博客列表页
 ![](https://img-blog.csdnimg.cn/direct/fdc72347292a45e6b53e409b0ebbbf16.png#pic_center)
 博客正文页
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/2f785867a8364ca4bb6774a32b46da23.png#pic_center)
 博客编辑页
-![](https://img-blog.csdnimg.cn/direct/83863962929c492887e6f861bf6501b7.png#pic_center)个人中心
+![](https://img-blog.csdnimg.cn/direct/83863962929c492887e6f861bf6501b7.png#pic_center)
+个人中心
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/direct/9dca8280cd854cd487274b8e3e7f8cbb.png#pic_center)
-修改头像页![请添加图片描述](https://img-blog.csdnimg.cn/direct/78d356b66b794451bcbd0eafa8eb8c14.png)
+修改头像页
+![请添加图片描述](https://img-blog.csdnimg.cn/direct/78d356b66b794451bcbd0eafa8eb8c14.png)
 ## 二、博客自动化测试用例
-![博客用例](https://img-blog.csdnimg.cn/direct/a36fa9c61ae142a58ead6bb61cf20a47.png)
+![](https://img-blog.csdnimg.cn/direct/a36fa9c61ae142a58ead6bb61cf20a47.png)
 ## 三、自动化测试
 
 ### 1）环境搭建
