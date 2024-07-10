@@ -20,7 +20,7 @@
 修改头像页
 ![请添加图片描述](https://img-blog.csdnimg.cn/direct/78d356b66b794451bcbd0eafa8eb8c14.png)
 ## 二、博客自动化测试用例
-![](https://img-blog.csdnimg.cn/direct/a36fa9c61ae142a58ead6bb61cf20a47.png)
+![img.png](img.png)
 ## 三、自动化测试
 
 ### 1）环境搭建
